@@ -4,11 +4,10 @@ public class VendingMachine {
     private ArrayList<ProductSlot> mainArr; //ОСНОВНОЙ СПИСОК СЛОТОВ В МАШИНЕ
     private CashBox cashBox; //КОМПОЗИЦИЯ | КАССА
     private Terminal terminal; //КОМПОЗИЦИЯ | ТЕРМИНАЛ
-    private SalesJournal journal;
+    private SalesJournal journal; //КОМПОЗИЦИЯ | ЖУРНАЛ ПРОДАЖ
 
     //ИНИЦИАЛИЗАЦИЯ
     {
-
         mainArr = new ArrayList<>();
         cashBox = new CashBox();
         terminal = new Terminal();
@@ -54,12 +53,12 @@ public class VendingMachine {
                 if (!cashBox.checkSum(ch, mainArr)) { System.out.println("Не хватает средств. \n"); break; }
                 else if (!(slot.getCount() > 0)) { System.out.println("Товар закончился.\n"); break; }
                 
-                slot.sent();
                 if (cashBox.Sent(slot.getSolar())) {
                     journal.getSlot(slot.getName(), slot.getId(), slot.getSolar(), cashBox.getLastMon());
-                    System.out.println(cashBox.getLastMon());
+                    // System.out.println(cashBox.getLastMon());
+                    slot.sent();
+                    System.out.println("Успешная покупка: " + slot.getName());
                 };
-                System.out.println();
                 break;
             case 7:
                 terminal.returnedMoney(cashBox);

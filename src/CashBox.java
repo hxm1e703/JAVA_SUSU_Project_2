@@ -21,7 +21,10 @@ public class CashBox {
 
         listMon = new ArrayList<>();
 
-        sum = countFiveRuble + countOneRuble + countTenRuble + countTwoRuble;
+        sum = countFiveRuble * 5 + 
+        countOneRuble + 
+        countTenRuble * 10 + 
+        countTwoRuble * 2;
         sumNow = 0;
     }
 
@@ -56,13 +59,12 @@ public class CashBox {
             countTwoRuble += twoNow;
             fiveNow = 0; twoNow = 0; tenNow = 0; oneNow = 0;
             listMon.add(0);
-            System.out.println("Successful");
+            // System.out.println("Successful");
             return true;
         } else {
             String ss = findMonetary(solar);
             if (!ss.isEmpty()) {
                 System.out.println(ss);
-                sum += sumNow;
                 listMon.add(sumNow-solar);
                 sumNow = 0;
                 return true;
@@ -93,17 +95,28 @@ public class CashBox {
         );
     }
 
+    private void setNow(int solar) {
+        sum += solar;
+        countFiveRuble += fiveNow;
+        countOneRuble += oneNow;
+        countTenRuble += tenNow;
+        countTwoRuble += twoNow;
+        fiveNow = 0; twoNow = 0; tenNow = 0; oneNow = 0;
+    }
+
     public String findMonetary(int solar) {
         int s = sumNow - solar;
         String ss = "";
         int need;
         if (s >= 10 && (countTenRuble + tenNow) >= (s/10)) {
             need = s / 10;
+            
             if (tenNow >= need) { tenNow -= need; }
             else { countTenRuble -= tenNow; countTenRuble -= (need - tenNow); }
             s %= 10;
             ss += ("Возвращено номинал 10: " + need + "\n");
-            if (s == 0) { return ss; }
+            System.out.println(tenNow);
+            if (s == 0) { setNow(solar);return ss; }
         }
         if (s >= 5 && (countFiveRuble + fiveNow) >= (s/5)) {
             need = s / 5;
@@ -111,7 +124,7 @@ public class CashBox {
             else { countFiveRuble -= fiveNow; countFiveRuble -= (need - fiveNow); }
             s %= 5;
             ss += ("Возвращено номинал 5: " + need + "\n");
-            if (s == 0) { return ss; }
+            if (s == 0) { setNow(solar);return ss; }
         } 
         if (s >= 2 && (countTwoRuble + twoNow) >= (s/2)) {
             need = s / 2;
@@ -119,7 +132,7 @@ public class CashBox {
             else { countTwoRuble -= twoNow; countTwoRuble -= (need - twoNow); }
             s %= 2;
             ss += ("Возвращено номинал 2: " + need + "\n");
-            if (s == 0) { return ss; }
+            if (s == 0) { setNow(solar);return ss; }
         }
         if (s >= 1 && (countOneRuble + oneNow) >= (s)) {
             need = s;
@@ -127,10 +140,14 @@ public class CashBox {
             else { countOneRuble -= oneNow; countOneRuble -= (need - oneNow); }
             s %= 1;
             ss += ("Возвращено номинал 1: " + need + "\n");
-            if (s == 0) { return ss; }
+            if (s == 0) { setNow(solar);return ss; }
         }
-
-        return ss;
+        if (s == 0) {
+            System.out.println("Successful " + solar);
+            setNow(solar);
+            return ss;
+        }
+        else return "";
     }
 
     public int getLastMon() { return listMon.getLast(); }

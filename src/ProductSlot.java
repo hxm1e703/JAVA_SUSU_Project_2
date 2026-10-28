@@ -5,7 +5,7 @@ public class ProductSlot {
     private String name;
     private int count;
     private int id;
-    //ИНИЦИАЛИЗАЦИЯ
+    //КОНСТРУКТОР
     public ProductSlot(String name, int solar, int count, int id) {
         this.solar = solar;
         this.name = name;
